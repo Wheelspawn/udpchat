@@ -35,8 +35,6 @@ Peer::Peer(QWidget *parent, QString name, int x_offset, connInfo my_conn_info, c
 
 void Peer::sendDatagrams()
 {
-    QHostAddress a = QHostAddress::LocalHost;
-
     std::string stdtxt = inputText->toPlainText().toStdString();
     const char* txt = stdtxt.c_str();
 
@@ -44,15 +42,13 @@ void Peer::sendDatagrams()
     while (txt_sz < strlen(txt))
     {
         const char* chunk_of_txt = (txt+txt_sz);
-        udpSocket->writeDatagram(chunk_of_txt, 512, a, this->peer_conn_info_.port);
+        udpSocket->writeDatagram(chunk_of_txt, 512, my_conn_info_.addr, this->peer_conn_info_.port);
         txt_sz += 512;
     }
 }
 
 void Peer::readDatagrams()
 {
-    QHostAddress a = QHostAddress::LocalHost;
-
     if (this->peer_conn_info_.port == 50001)
     {
         text.append("Message from Bob at\n");
