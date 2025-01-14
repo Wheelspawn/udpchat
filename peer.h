@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QTextEdit>
 #include <QUdpSocket>
+#include <QLayout>
 
 struct connInfo
 {
@@ -17,8 +18,8 @@ class Peer : public QWidget
     Q_OBJECT
     public:
         explicit Peer(QWidget *parent,
+                      QLayout *layout,
                       QString name,
-                      int x_offset,
                       connInfo my_conn_info,
                       connInfo peer_conn_info);
 

@@ -6,24 +6,20 @@
 #include <QUdpSocket>
 #include <QNetworkDatagram>
 #include <QDateTime>
+#include <QVBoxLayout>
 
-Peer::Peer(QWidget *parent, QString name, int x_offset, connInfo my_conn_info, connInfo peer_conn_info) : QWidget(parent)
+Peer::Peer(QWidget *parent, QLayout *layout, QString name, connInfo my_conn_info, connInfo peer_conn_info) : QWidget(parent)
 {
-    sendInputTextButton = new QPushButton(name, parent);
-    sendInputTextButton->setGeometry(x_offset, 10, 480, 50);
-
-    inputText = new QTextEdit(parent);
-    inputText->setGeometry(x_offset, 70, 480, 170);
-    inputText->show();
-
-    text = QString("");
-
-    receivedMessages = new QTextEdit(parent);
-    receivedMessages->setGeometry(x_offset, 250, 480, 460);
-    receivedMessages->setText(text);
+    sendInputTextButton = new QPushButton(name);
+    inputText = new QTextEdit();
+    receivedMessages = new QTextEdit();
     receivedMessages->setReadOnly(true);
 
-    udpSocket = new QUdpSocket(parent);
+    layout->addWidget(sendInputTextButton);
+    layout->addWidget(inputText);
+    layout->addWidget(receivedMessages);
+
+    udpSocket = new QUdpSocket();
     udpSocket->bind(my_conn_info.addr, my_conn_info.port);
 
     my_conn_info_ = my_conn_info;
@@ -51,14 +47,13 @@ void Peer::readDatagrams()
 {
     if (peer_conn_info_.port == 50001)
     {
-        text.append("Message from Bob at\n");
+        text.append("Message from Bob at [");
     }
     else
     {
-        text.append("Message from Alice at\n");
+        text.append("Message from Alice at [");
     }
 
-    text.append("[");
     text.append(QDateTime::currentDateTime().toString().toStdString().c_str());
     text.append("]\n");
 
